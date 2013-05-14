@@ -25,10 +25,10 @@ public class ConfigurationGui extends JFrame{
 		setSize(300, 400);
 		ConfigurationPanel panel = new ConfigurationPanel();
 		panel.add(new JLabel("Enter the host name"));
-		hostTextField = new JTextField(40);
+		hostTextField = new JTextField(25);
 		panel.add(hostTextField);
 		panel.add(new JLabel("Enter the interval"));
-		intervalTextField = new JTextField(40);
+		intervalTextField = new JTextField(4);
 		panel.add(intervalTextField);
 		add(panel, BorderLayout.CENTER);
 
@@ -65,12 +65,7 @@ public class ConfigurationGui extends JFrame{
 			if ("addInterval".equals(e.getActionCommand())) {
 
 				String intervalString = ConfigurationGui.this.intervalTextField.getText();
-				if (!intervalString.equals("")){
-					int interval = Integer.parseInt(intervalString);
-					if (interval >= 1 ) {
-						setInterval(interval*1000);
-					}
-				}
+				setInterval(intervalString);
 				JOptionPane.showMessageDialog(frame,
 						Configuration.getInstance().getInterval());
 			}
@@ -86,8 +81,14 @@ public class ConfigurationGui extends JFrame{
 		}
 	}
 
-	public void setInterval(int interval) {
-		Configuration.getInstance().setInterval(interval);
+	public void setInterval(String intervalString) {
+		if (!intervalString.equals("")){
+			int interval = Integer.parseInt(intervalString);
+			if (interval >= 1 ) {
+				Configuration.getInstance().setInterval(interval);
+			}
+		}
+
 	}
 
 
