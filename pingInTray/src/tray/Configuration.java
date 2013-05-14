@@ -3,8 +3,8 @@ package tray;
 public class Configuration {
 
 	private static Configuration configuration; 
-	private String host;
-	private int interval;
+	private String host = "www.google.com";
+	private int interval= 3000;
 	
 	private Configuration(){}
 	

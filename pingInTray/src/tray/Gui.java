@@ -17,6 +17,7 @@ public class Gui implements ActionListener{
 	 SystemTray tray;
 	 
 	public Gui(){
+		
 		if (!SystemTray.isSupported()) {
 			//TODO make a msg box
 			System.out.println("SystemTray is not supported");
@@ -33,7 +34,7 @@ public class Gui implements ActionListener{
 			configure.setActionCommand("Configure");
 			PopupMenu mainMenu = new PopupMenu();
 			mainMenu.add(exitItem);
-			//mainMenu.add(configure);
+			mainMenu.add(configure);
 
 			String currentDir = System.getProperty("user.dir");
 			Image image = new ImageIcon(currentDir+"\\src\\tray\\test.jpg").getImage();
@@ -69,6 +70,8 @@ public class Gui implements ActionListener{
 		{
 			//TODO msg box or don't bother printing a message
 			System.out.println("Configure");
+			ConfigurationGui configurer = new ConfigurationGui();
+			configurer.setVisible(true);
 
 		}
 		

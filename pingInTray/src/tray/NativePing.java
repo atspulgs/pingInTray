@@ -2,6 +2,7 @@ package tray;
 
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 public class NativePing {
 
@@ -50,6 +51,24 @@ public class NativePing {
 			e.printStackTrace();
 		}
 		return 0;
+	}
+
+	public boolean checkIsReachable(String host) {
+		boolean isReachable = false;
+	    try {
+	        Process proc = new ProcessBuilder("ping", host).start();
+
+	        int exitValue = proc.waitFor();
+	        System.out.println("Exit Value:" + exitValue);
+	        if(exitValue == 0)
+	            isReachable = true;
+	    } catch (IOException e1) {
+	        System.out.println(e1.getMessage());
+	        e1.printStackTrace();
+	    } catch (InterruptedException e) {
+	        e.printStackTrace();
+	    }
+	    return isReachable;
 	}
 
 }

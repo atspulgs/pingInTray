@@ -25,13 +25,13 @@ public class TrayUpdater implements Runnable {
 		
 		while(true){
 			
-			time = ping.obtainPingTime("www.google.ie");
+			time = ping.obtainPingTime(Configuration.getInstance().getHost());
 			Image pingTimeAsImage = formatConverter.intToImage(time);
 
 			trayIcon.setImage(pingTimeAsImage);
 
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(Configuration.getInstance().getInterval());
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
