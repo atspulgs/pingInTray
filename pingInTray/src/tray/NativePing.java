@@ -3,8 +3,7 @@ package tray;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Scanner;
-public class pingFix {
+public class NativePing {
 
 	public int obtainPingTime(String host) {
 		try{
