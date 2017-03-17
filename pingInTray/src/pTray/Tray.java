@@ -17,11 +17,11 @@ import java.awt.image.BufferedImage;
 /**
  * @author Atspulgs
  */
-public class Tray {
+public class Tray implements Updatable<String> {
+    //I will assign these in thje constructors as well.
     private Color bgColor = Color.WHITE;
     private Color fgColor = Color.BLACK;
     private Font font = new Font("Arial", Font.BOLD, 12);
-    private String target = "google.com";
     
     private SystemTray tray = null;
     private TrayIcon ticon = null;
@@ -53,10 +53,6 @@ public class Tray {
         }
     }
     
-    public synchronized void update(String upd) {
-        this.ticon.setImage(this.generateImage(upd));
-    }
-    
     private void instantiate() {
         this.tray = SystemTray.getSystemTray();
         this.ticon = new TrayIcon(this.generateImage("00"), "Ping In Tray", this.pMenu);
@@ -80,7 +76,16 @@ public class Tray {
         System.out.println(this.state.getDescription());
     }
     
+    //Update the Image.
+    @Override
+    public synchronized void update(String upd) {
+        this.ticon.setImage(this.generateImage(upd));
+    }
+    
+    //Generate Images
     private Image generateImage(String text) {
+        if(text.length() == 1) text = "0"+text;
+        else if(text.length() < 1) text = "00";
         BufferedImage img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = img.createGraphics();
         //Sounds like a good idea, dont quite get these
@@ -92,10 +97,11 @@ public class Tray {
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-        
+        //Draw background
         g2d.setColor(this.bgColor);
         g2d.fill(new RoundRectangle2D.Double(0,0,16,16,10,10));
         
+        //Draw Font
         g2d.setFont(this.font);
         g2d.setColor(this.fgColor);
         g2d.drawString(text, 1, 12);
@@ -104,6 +110,4 @@ public class Tray {
         
         return img;
     }
-    
-    //PING function
 }
