@@ -4,6 +4,8 @@ import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -18,10 +20,13 @@ import java.awt.image.BufferedImage;
  * @author Atspulgs
  */
 public class Tray implements Updatable<String> {
-    //I will assign these in thje constructors as well.
-    private Color bgColor = Color.WHITE;
-    private Color fgColor = Color.BLACK;
-    private Font font = new Font("Arial", Font.BOLD, 12);
+    //I will assign these in the constructors as well.
+    private Color bgColor;
+    private int bgIndex;
+    private Color fgColor;
+    private int fgIndex;
+    private Font font;
+    private int fontIndex;
     
     private SystemTray tray = null;
     private TrayIcon ticon = null;
@@ -49,6 +54,12 @@ public class Tray implements Updatable<String> {
             this.state = State.S02;
             System.out.println(this.state.getDescription());
         } else {
+            this.bgColor = Color.WHITE;
+            this.bgIndex = 0;
+            this.fgColor = Color.BLACK;
+            this.fgIndex = 1;
+            this.font = new Font("Arial", Font.BOLD, 12);
+            this.fontIndex = 0;
             this.instantiate();
         }
     }
@@ -56,16 +67,29 @@ public class Tray implements Updatable<String> {
     private void instantiate() {
         this.tray = SystemTray.getSystemTray();
         this.ticon = new TrayIcon(this.generateImage("00"), "Ping In Tray", this.pMenu);
-        //other MenuItems....
-        //Settings Menu item
+        MenuItem settings = new MenuItem("Settings");
+        settings.setActionCommand("_action_settings");
+        settings.addActionListener((ActionEvent e) -> {
+            if(e.getActionCommand().equals("_action_settings")) {
+                Settings s = new Settings(this);
+                s.setSize(300, 200);
+                s.setResizable(false);
+                s.setVisible(true);
+                GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+                int width = gd.getDisplayMode().getWidth();
+                int height = gd.getDisplayMode().getHeight();
+                s.setLocation(width-300, height-240);
+                //Frame Decoration??
+            }
+        });
         MenuItem exit = new MenuItem("Exit");
         exit.setActionCommand("_action_exit");
         exit.addActionListener((ActionEvent e) -> {
-            switch(e.getActionCommand()) {
-                case "_action_exit":
-                    System.exit(0);
+            if(e.getActionCommand().equals("_action_exit")) {
+                System.exit(0);
             } 
         });
+        this.pMenu.add(settings);
         this.pMenu.add(exit);
         try {
             this.tray.add(this.ticon);
@@ -110,4 +134,30 @@ public class Tray implements Updatable<String> {
         
         return img;
     }
+    // Setters
+    public void setBgColor(Color bgColor) {
+        this.bgColor = bgColor;
+    }
+    public void setBgIndex(int ind) {
+        this.bgIndex = ind;
+    }
+    public void setFgColor(Color fgColor) {
+        this.fgColor = fgColor;
+    }
+    public void setFgIndex(int ind) {
+        this.fgIndex = ind;
+    }
+    public void setFont(Font font) {
+        this.font = font;
+    }
+    public void setFontIndex(int ind) {
+        this.fontIndex = ind;
+    }
+    // Getters
+    public Color getBgColor() { return this.bgColor; }
+    public int getBgIndex() { return this.bgIndex; }
+    public Color getFgColor() { return this.fgColor; }
+    public int getFgIndex() { return this.fgIndex; }
+    public Font getFont() { return this.font; }
+    public int getFontIndex() { return this.fontIndex; }
 }

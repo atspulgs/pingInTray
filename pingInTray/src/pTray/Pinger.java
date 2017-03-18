@@ -63,7 +63,7 @@ public class Pinger implements Runnable {
                 break;
             }
         } catch (IOException | InterruptedException ex) {
-
+            
         }
 
         switch(this.elev) {
