@@ -8,9 +8,10 @@ import java.io.InputStreamReader;
  * @author Atspulgs
  */
 public class Pinger implements Runnable {
-    private final String target;
+    private String target;
     private final Updatable upd;
     private Elevation elev;
+    private int delay;
     
     public enum Elevation {
         Minimum,
@@ -19,13 +20,14 @@ public class Pinger implements Runnable {
     }
     
     public Pinger(String target, Updatable upd) {
-        this(target,upd,Elevation.Average);
+        this(target,upd,Elevation.Average, 1000);
     }
     
-    public Pinger(String target, Updatable upd, Elevation elev) {
+    public Pinger(String target, Updatable upd, Elevation elev, int delay) {
         this.target = target;
         this.upd = upd;
         this.elev = elev;
+        this.delay = delay;
     }
     
     @Override
@@ -33,7 +35,7 @@ public class Pinger implements Runnable {
          while(true) {
              try {
                  this.upd.update(""+this.ping());
-                 Thread.sleep(1000);
+                 Thread.sleep(this.delay);
              } catch (InterruptedException ex) {
                  System.out.println("Interruped!");
              }
@@ -72,5 +74,14 @@ public class Pinger implements Runnable {
             case Maximum: return max;
             default: return 0;
         }
+    }
+
+    public String getTarget() { return target; }
+    public void setTarget(String target) { this.target = target; }
+    public int getDelay() {
+        return delay;
+    }
+    public void setDelay(int delay) {
+        this.delay = delay;
     }
 }

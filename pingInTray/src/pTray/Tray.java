@@ -67,18 +67,21 @@ public class Tray implements Updatable<String> {
     private void instantiate() {
         this.tray = SystemTray.getSystemTray();
         this.ticon = new TrayIcon(this.generateImage("00"), "Ping In Tray", this.pMenu);
+        Pinger p = new Pinger("google.com",this);
+        Thread updater = new Thread(p);
+        updater.start();
         MenuItem settings = new MenuItem("Settings");
         settings.setActionCommand("_action_settings");
         settings.addActionListener((ActionEvent e) -> {
             if(e.getActionCommand().equals("_action_settings")) {
-                Settings s = new Settings(this);
-                s.setSize(300, 200);
+                Settings s = new Settings(this, p);
+                s.setSize(300, 280);
                 s.setResizable(false);
                 s.setVisible(true);
                 GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
                 int width = gd.getDisplayMode().getWidth();
                 int height = gd.getDisplayMode().getHeight();
-                s.setLocation(width-300, height-240);
+                s.setLocation(width-300, height-320);
                 //Frame Decoration??
             }
         });

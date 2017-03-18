@@ -9,6 +9,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 /**
@@ -46,22 +47,30 @@ public class Settings extends JFrame {
     };
     
     private final Tray tray;
+    private final Pinger pinger;
     private final JPanel pane = new JPanel();
     private final JLabel title = new JLabel("Settings");
     private final JLabel bgLabel = new JLabel("Background color:");
     private final JLabel fgLabel = new JLabel("Foreground color:");
     private final JLabel fontLabel = new JLabel("Text Font:");
+    private final JLabel targetLabel = new JLabel("Target to Ping:");
+    private final JLabel delayLabel = new JLabel("Ping Delay:");
     private final JComboBox bgColorBox = new JComboBox(colors);
     private final JComboBox fgColorBox = new JComboBox(colors);
     private final JComboBox fontBox = new JComboBox(fonts);
+    private final JTextField targetBox = new JTextField();
+    private final JTextField delayBox = new JTextField();
     private final JButton applyButton = new JButton("Apply");
     private final GroupLayout mainLayout = new GroupLayout(pane);
-    public Settings(Tray tray) {
+    public Settings(Tray tray, Pinger pinger) {
         this.tray = tray;
+        this.pinger = pinger;
         this.title.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
         this.bgColorBox.setSelectedIndex(this.tray.getBgIndex());
         this.fgColorBox.setSelectedIndex(this.tray.getFgIndex());
         this.fontBox.setSelectedIndex(this.tray.getFontIndex());
+        this.targetBox.setText(this.pinger.getTarget());
+        this.delayBox.setText(""+this.pinger.getDelay());
         this.applyButton.setActionCommand("_action_settings_apply");
         this.applyButton.addActionListener((ActionEvent e) -> {
             if(e.getActionCommand().equals("_action_settings_apply")) {
@@ -71,6 +80,8 @@ public class Settings extends JFrame {
                 this.tray.setFgIndex(this.fgColorBox.getSelectedIndex());
                 this.tray.setFont(this.getFont(fonts[this.fontBox.getSelectedIndex()]));
                 this.tray.setFontIndex(this.fontBox.getSelectedIndex());
+                this.pinger.setTarget(this.targetBox.getText());
+                this.pinger.setDelay(Integer.parseInt(this.delayBox.getText()));
             }
         });
         this.setContentPane(pane);
@@ -87,11 +98,15 @@ public class Settings extends JFrame {
                     .addComponent(bgLabel)
                     .addComponent(fgLabel)
                     .addComponent(fontLabel)
+                    .addComponent(targetLabel)
+                    .addComponent(delayLabel)
                 ).addGroup(
                     mainLayout.createParallelGroup()
                     .addComponent(bgColorBox)
                     .addComponent(fgColorBox)
                     .addComponent(fontBox)
+                    .addComponent(targetBox)
+                    .addComponent(delayBox)
                     .addComponent(applyButton)
                 )
             )
@@ -111,9 +126,17 @@ public class Settings extends JFrame {
                 mainLayout.createParallelGroup()
                 .addComponent(fontLabel)
                 .addComponent(fontBox)
+            ).addGroup(
+                mainLayout.createParallelGroup()
+                .addComponent(targetLabel)
+                .addComponent(targetBox)
+            ).addGroup(
+                mainLayout.createParallelGroup()
+                .addComponent(delayLabel)
+                .addComponent(delayBox)
             ).addComponent(applyButton)
         );
-        this.mainLayout.linkSize(SwingConstants.VERTICAL,bgLabel,bgColorBox,fgLabel,fgColorBox,fontLabel,fontBox);
+        this.mainLayout.linkSize(SwingConstants.VERTICAL,bgLabel,bgColorBox,fgLabel,fgColorBox,fontLabel,fontBox,targetLabel,targetBox,delayLabel,delayBox);
     }
     
     private Font getFont(String name) {
